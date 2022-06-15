@@ -84,7 +84,7 @@ public class HelloController {
         dayCMonthBegan = daysArray[currentPositionInDaysList];
 
         int rowPosition = 1;
-        int dayLimit = howManyDays(month); //holds the amount of days in the month
+        int dayLimit = howManyDays(month, year); //holds the amount of days in the month
 
 //      loop through the days of the month
         while(dayAsNum!=dayLimit+1){
@@ -95,8 +95,15 @@ public class HelloController {
                 currentPositionInDaysList=0;
             }
 
-//          Add the day to the grid
-            calenderGrid.add(new Label(String.valueOf(dayAsNum)), currentPositionInDaysList, rowPosition);
+//          Add the day to the grid with event setup
+            Label l1 = new Label(String.valueOf(dayAsNum));
+            l1.setId("day"+dayAsNum);
+            VBox v1 = new VBox();
+            v1.setId("grid"+dayAsNum);
+            v1.getStyleClass().add("dayGridStyle");
+            v1.getChildren().add(l1);
+            v1.setOnMouseClicked(e -> { dayClicked(v1); });
+            calenderGrid.add((v1), currentPositionInDaysList, rowPosition);
 
             dayCMonthEnded = daysArray[currentPositionInDaysList];
 //          Increment column position and day
@@ -119,11 +126,34 @@ public class HelloController {
     }
 
     //  Returns the amount of days in a given month
-    public int howManyDays(String month){
+    public int howManyDays(String month, String year){
         int dayLimit=0;
         switch (month){
             case("Jan"): dayLimit = 31; break;
-            case("Feb"): dayLimit = 28; break;
+            case("Feb"):
+                //Check for Leap year
+                int yearValue = Integer.parseInt(year);
+                boolean leap = false;
+                // if the year is divisible by 4
+                if (yearValue % 4 == 0){
+                    // if the year is century
+                    if (yearValue % 100 == 0){
+                        // if year is divided by 400
+                        if (yearValue % 400 == 0){
+                            leap = true;
+                        }else
+                            leap = false;
+                    }else
+                        leap = true;
+                }else
+                    leap = false;
+
+                if (!leap){
+                    dayLimit = 28;
+                }else{
+                    dayLimit = 29;
+                }
+                break;
             case("Mar"): dayLimit = 31; break;
             case("Apr"): dayLimit = 30; break;
             case("May"): dayLimit = 31; break;
@@ -192,10 +222,14 @@ public class HelloController {
         }
 
         // Since program gets the day the last month ends the cDay needs to be set to the last numeric day value of the month
-        int dayLimit = howManyDays(newMonth);
+        int dayLimit = howManyDays(newMonth,cYear);
         cDayAsNum=dayLimit;
 
         setCalender(cDay, cDayAsNum, cMonth, cYear);
+    }
+
+    public void dayClicked(VBox v1){
+        v1.setStyle("-fx-background-color: #1e1c1c;");
     }
 
 }
