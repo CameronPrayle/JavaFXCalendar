@@ -1,7 +1,10 @@
 package com.example.calendertest2;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -9,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class HelloController {
@@ -26,6 +30,20 @@ public class HelloController {
     private Label yearLabel;
     @FXML
     private GridPane calenderGrid;
+    @FXML
+    private GridPane markerInfoBar;
+    @FXML
+    private Label markerInfoClose;
+    @FXML
+    private TextField markerNameField;
+    @FXML
+    private ColorPicker markerColourPicker;
+    @FXML
+    private CheckBox markerNotifCheck;
+    @FXML
+    private CheckBox markerGiftCheck;
+
+
 
     //  Month and Days Arrays
     String[] monthsArray = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -45,9 +63,17 @@ public class HelloController {
     String dayCMonthBegan="";
     String dayCMonthEnded="";
 
+    // Initialise nodes needed for adding marker
+    VBox currentDayNode;
+    Label currentDayLabel;
+
+    ArrayList<BirthdayMarker> bdayMarkers = new ArrayList<BirthdayMarker>();
+
     @FXML
     public void initialize(){
         setCalender(cDay, cDayAsNum, cMonth, cYear);
+        markerInfoBar.setVisible(false);
+        markerInfoBar.managedProperty().bind(markerInfoBar.visibleProperty());
     }
 
 
@@ -102,7 +128,7 @@ public class HelloController {
             v1.setId("grid"+dayAsNum);
             v1.getStyleClass().add("dayGridStyle");
             v1.getChildren().add(l1);
-            v1.setOnMouseClicked(e -> { dayClicked(v1); });
+            v1.setOnMouseClicked(e -> { dayClicked(v1,l1); });
             calenderGrid.add((v1), currentPositionInDaysList, rowPosition);
 
             dayCMonthEnded = daysArray[currentPositionInDaysList];
@@ -228,8 +254,29 @@ public class HelloController {
         setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
 
-    public void dayClicked(VBox v1){
-        v1.setStyle("-fx-background-color: #1e1c1c;");
+    public void dayClicked(VBox v1, Label l1){
+        markerInfoBar.setVisible(true);
+        currentDayNode=v1;
+        currentDayLabel=l1;
+    }
+
+    public void closeNode(){
+        markerInfoBar.setVisible(false);
+    }
+
+    public void addMarker(){
+        // Get data for selected birthday
+        String day = currentDayLabel.getText();
+        String month = cMonth;
+        String year = cYear;
+        String name = markerNameField.getText();
+        String colour = String.valueOf(markerColourPicker.getValue());
+        boolean notif = markerNotifCheck.isSelected();
+        boolean gift = markerGiftCheck.isSelected();
+
+        // Make BirthdayMarker object, add it to BirthdayMarker list
+        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift);
+        bdayMarkers.add(b1);
     }
 
 }

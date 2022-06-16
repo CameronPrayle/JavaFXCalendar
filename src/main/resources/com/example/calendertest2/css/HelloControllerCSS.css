@@ -1,3 +1,7 @@
 .dayGridStyle:hover{
     -fx-border-color: #1e1c1c;
 }
+
+#markerInfoClose:hover{
+    -fx-text-fill: blue;
+}
