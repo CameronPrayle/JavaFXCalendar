@@ -5,3 +5,11 @@
 #markerInfoClose:hover{
     -fx-text-fill: blue;
 }
+
+#markerEditInfoClose:hover{
+    -fx-text-fill: blue;
+}
+
+.bdayMarkerStyle:hover{
+    -fx-opacity: 0.85;
+}

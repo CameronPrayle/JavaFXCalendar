@@ -9,11 +9,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class HelloController {
     @FXML
@@ -42,6 +45,18 @@ public class HelloController {
     private CheckBox markerNotifCheck;
     @FXML
     private CheckBox markerGiftCheck;
+    @FXML
+    private GridPane markerEditInfoBar;
+    @FXML
+    private Label markerEditInfoClose;
+    @FXML
+    private TextField markerEditNameField;
+    @FXML
+    private ColorPicker markerEditColourPicker;
+    @FXML
+    private CheckBox markerEditNotifCheck;
+    @FXML
+    private CheckBox markerEditGiftCheck;
 
 
 
@@ -67,19 +82,58 @@ public class HelloController {
     VBox currentDayNode;
     Label currentDayLabel;
 
+    //Initialise Bday markers list
     ArrayList<BirthdayMarker> bdayMarkers = new ArrayList<BirthdayMarker>();
 
     @FXML
     public void initialize(){
+        readBDayMarkerCSV();
         setCalender(cDay, cDayAsNum, cMonth, cYear);
         markerInfoBar.setVisible(false);
         markerInfoBar.managedProperty().bind(markerInfoBar.visibleProperty());
+        markerEditInfoBar.setVisible(false);
+        markerEditInfoBar.managedProperty().bind(markerEditInfoBar.visibleProperty());
+    }
+
+    //Reads the BdayMarker CSV file and creates birthday marker objects using its contents. Stores the birthday markers in a list to display them in the calendar
+    private void readBDayMarkerCSV() {
+        try {
+            File f = new File("BDayMarker.csv");
+            Scanner readFile = new Scanner(f);
+            while (readFile.hasNextLine()){
+                // Get data for current lines birthday
+                String currentLine = readFile.nextLine();
+                // Split up current line by commas
+                String[] currentLineSplit = currentLine.split(",");
+                String day = currentLineSplit[1];
+                String month = currentLineSplit[2];
+                String year = currentLineSplit[3];
+                String name = currentLineSplit[0];
+                String colour = currentLineSplit[4];
+                boolean notif;
+                boolean gift;
+                if(currentLineSplit[5].equals("true")){
+                    notif = true;
+                }else{
+                    notif = false;
+                }
+                if(currentLineSplit[6].equals("true")){
+                    gift = true;
+                }else{
+                    gift = false;
+                }
+
+                // Make BirthdayMarker object, add it to BirthdayMarker list
+                bdayMarkers.add(new BirthdayMarker(name,day,month,year,colour,notif,gift));
+            }
+        }catch (Exception e){}
     }
 
 
     //  Writes the days of the month in the calendar grid
     public void setCalender(String day, int dayAsNum ,String month, String year){
-
+        markerEditInfoBar.setVisible(false);
+        markerInfoBar.setVisible(false);
         setWeekDays();
         setMenuMonthYear(month, year);
 
@@ -129,6 +183,21 @@ public class HelloController {
             v1.getStyleClass().add("dayGridStyle");
             v1.getChildren().add(l1);
             v1.setOnMouseClicked(e -> { dayClicked(v1,l1); });
+
+            // Search through the bday marker array for bdays matching the current date and add them to the calender
+            for(int i=0; i<bdayMarkers.size(); i++){
+                if(dayAsNum == Integer.parseInt(bdayMarkers.get(i).day) && month.equals(bdayMarkers.get(i).month) && year.equals(bdayMarkers.get(i).year)){
+                    Label l2 = new Label(bdayMarkers.get(i).name);
+                    HBox h1 = new HBox();
+                    h1.getStyleClass().add("bdayMarkerStyle");
+                    String[] splitBDayColour = bdayMarkers.get(i).colour.split("0x");
+                    h1.setStyle("-fx-background-color: #"+ splitBDayColour[1] + ";");
+                    h1.getChildren().add(l2);
+                    int j = i;
+                    h1.setOnMouseClicked(e -> { markerClicked(h1,l2,bdayMarkers.get(j)); });
+                    v1.getChildren().add(h1);
+                }
+            }
             calenderGrid.add((v1), currentPositionInDaysList, rowPosition);
 
             dayCMonthEnded = daysArray[currentPositionInDaysList];
@@ -255,13 +324,18 @@ public class HelloController {
     }
 
     public void dayClicked(VBox v1, Label l1){
+        if(!(currentDayNode==null)){
+            currentDayNode.setStyle("-fx-background-color: transparent;");
+        }
         markerInfoBar.setVisible(true);
         currentDayNode=v1;
         currentDayLabel=l1;
+        currentDayNode.setStyle("-fx-background-color: #ADD8E6;");
     }
 
     public void closeNode(){
         markerInfoBar.setVisible(false);
+        currentDayNode.setStyle("-fx-background-color: transparent;");
     }
 
     public void addMarker(){
@@ -276,7 +350,30 @@ public class HelloController {
 
         // Make BirthdayMarker object, add it to BirthdayMarker list
         BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift);
+        b1.addMarkerToFile();
         bdayMarkers.add(b1);
+        calenderGrid.getChildren().clear();
+        setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
+
+    public void closeEditNode(){
+        markerEditInfoBar.setVisible(false);
+    }
+
+    private void markerClicked(HBox h1, Label l2, BirthdayMarker b1) {
+        markerEditInfoBar.setVisible(true);
+        markerEditNameField.setText(b1.name);
+        markerEditColourPicker.setValue(Color.valueOf(b1.colour));
+        markerEditNotifCheck.setSelected(b1.notification);
+        markerEditGiftCheck.setSelected(b1.gift);
+    }
+    public void editMarker(){
+
+    }
+
+    public void deleteMarker(){
+
+    }
+
 
 }
