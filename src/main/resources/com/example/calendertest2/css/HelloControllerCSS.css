@@ -11,5 +11,17 @@
 }
 
 .bdayMarkerStyle:hover{
-    -fx-opacity: 0.85;
+    -fx-opacity: 0.55;
+}
+
+#upArrow:hover{
+    -fx-opacity: 0.55;
+}
+
+#downArrow:hover{
+    -fx-opacity: 0.55;
+}
+
+#moonIcon:hover{
+    -fx-opacity: 0.55;
 }

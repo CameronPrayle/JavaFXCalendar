@@ -12,10 +12,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class HelloController {
@@ -24,10 +26,6 @@ public class HelloController {
     @FXML
     private HBox menuHbox;
     @FXML
-    private ImageView upArrow;
-    @FXML
-    private ImageView downArrow;
-    @FXML
     private Label monthLabel;
     @FXML
     private Label yearLabel;
@@ -35,8 +33,6 @@ public class HelloController {
     private GridPane calenderGrid;
     @FXML
     private GridPane markerInfoBar;
-    @FXML
-    private Label markerInfoClose;
     @FXML
     private TextField markerNameField;
     @FXML
@@ -48,8 +44,6 @@ public class HelloController {
     @FXML
     private GridPane markerEditInfoBar;
     @FXML
-    private Label markerEditInfoClose;
-    @FXML
     private TextField markerEditNameField;
     @FXML
     private ColorPicker markerEditColourPicker;
@@ -57,8 +51,6 @@ public class HelloController {
     private CheckBox markerEditNotifCheck;
     @FXML
     private CheckBox markerEditGiftCheck;
-
-
 
     //  Month and Days Arrays
     String[] monthsArray = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -84,6 +76,9 @@ public class HelloController {
 
     //Initialise Bday markers list
     ArrayList<BirthdayMarker> bdayMarkers = new ArrayList<BirthdayMarker>();
+
+    //Initialise birthday marker that has been currently clicked
+    BirthdayMarker currentBDaymarker;
 
     @FXML
     public void initialize(){
@@ -361,6 +356,9 @@ public class HelloController {
     }
 
     private void markerClicked(HBox h1, Label l2, BirthdayMarker b1) {
+        // Set user input fields to the birthday marker details
+        currentBDaymarker = b1;
+        markerInfoBar.setVisible(false);
         markerEditInfoBar.setVisible(true);
         markerEditNameField.setText(b1.name);
         markerEditColourPicker.setValue(Color.valueOf(b1.colour));
@@ -368,12 +366,56 @@ public class HelloController {
         markerEditGiftCheck.setSelected(b1.gift);
     }
     public void editMarker(){
+        deleteMarker(); // Delete the old marker
 
+        //Add new instance of birthday marker
+        String day = currentDayLabel.getText();
+        String month = cMonth;
+        String year = cYear;
+        String name = markerEditNameField.getText();
+        String colour = String.valueOf(markerEditColourPicker.getValue());
+        boolean notif = markerEditNotifCheck.isSelected();
+        boolean gift = markerEditGiftCheck.isSelected();
+        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift);
+        b1.addMarkerToFile();
+        bdayMarkers.add(b1);
+
+        //Redraw Calendar
+        calenderGrid.getChildren().clear();
+        setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
 
-    public void deleteMarker(){
-
+    public void deleteMarker() {
+        // Rebuild CSV file to not include the old birthday marker
+        List<String> fileContents = new ArrayList<>();
+        try {
+            File f = new File("BDayMarker.csv");
+            Scanner readFile = new Scanner(f);
+            while (readFile.hasNextLine()) {
+                String currentLine = readFile.nextLine();
+                String[] currentLineSplit = currentLine.split(",");
+                String day = currentLineSplit[1];
+                String month = currentLineSplit[2];
+                String year = currentLineSplit[3];
+                String name = currentLineSplit[0];
+                if (!(currentBDaymarker.name.equals(name) && currentBDaymarker.day.equals(day) && currentBDaymarker.month.equals(month) && currentBDaymarker.year.equals(year))) {
+                    fileContents.add(currentLine);
+                } else {
+                    bdayMarkers.remove(currentBDaymarker);
+                }
+            }
+            //Rewrite file using fileContents
+            FileWriter fw = new FileWriter("BDayMarker.csv");
+            for (String fileContent : fileContents) {
+                fw.write(fileContent + "\n");
+            }
+            fw.close();
+        } catch (Exception e) {}
     }
 
-
+    public void changeTheme(){
+        vContainer.setStyle("-fx-background-color: #020000;");
+        monthLabel.setTextFill(Color.web("#CCCCCC"));
+        yearLabel.setTextFill(Color.web("#CCCCCC"));
+    }
 }
