@@ -1,10 +1,8 @@
 package com.example.calendertest2;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,7 +22,17 @@ public class HelloController {
     @FXML
     private VBox vContainer;
     @FXML
+    private HBox titleBar;
+    @FXML
+    private Label titleLabel;
+    @FXML
     private HBox menuHbox;
+    @FXML
+    private ImageView upArrow;
+    @FXML
+    private ImageView downArrow;
+    @FXML
+    private ImageView moonIcon;
     @FXML
     private Label monthLabel;
     @FXML
@@ -42,6 +50,8 @@ public class HelloController {
     @FXML
     private CheckBox markerGiftCheck;
     @FXML
+    private Label markerInfoClose;
+    @FXML
     private GridPane markerEditInfoBar;
     @FXML
     private TextField markerEditNameField;
@@ -51,6 +61,26 @@ public class HelloController {
     private CheckBox markerEditNotifCheck;
     @FXML
     private CheckBox markerEditGiftCheck;
+    @FXML
+    private Label markerEditInfoClose;
+    @FXML
+    private Label addBirthdayLabel;
+    @FXML
+    private Label editBirthdayLabel;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label nameEditLabel;
+    @FXML
+    private Label colourLabel;
+    @FXML
+    private Label colourEditLabel;
+    @FXML
+    private Button userFinishButton;
+    @FXML
+    private Button userEditButton;
+    @FXML
+    private Button userDeleteButton;
 
     //  Month and Days Arrays
     String[] monthsArray = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -80,10 +110,13 @@ public class HelloController {
     //Initialise birthday marker that has been currently clicked
     BirthdayMarker currentBDaymarker;
 
+    // Current theme, checked when theme is changed to apply opposite settings to current theme
+    String currentTheme = "light";
+
     @FXML
     public void initialize(){
         readBDayMarkerCSV();
-        setCalender(cDay, cDayAsNum, cMonth, cYear);
+        changeTheme();
         markerInfoBar.setVisible(false);
         markerInfoBar.managedProperty().bind(markerInfoBar.visibleProperty());
         markerEditInfoBar.setVisible(false);
@@ -173,13 +206,18 @@ public class HelloController {
 //          Add the day to the grid with event setup
             Label l1 = new Label(String.valueOf(dayAsNum));
             l1.setId("day"+dayAsNum);
+            if(currentTheme.equals("light")){
+                l1.setTextFill(Color.web("#000000"));
+            }else{
+                l1.setTextFill(Color.web("#FEFEFE"));
+            }
             VBox v1 = new VBox();
             v1.setId("grid"+dayAsNum);
             v1.getStyleClass().add("dayGridStyle");
             v1.getChildren().add(l1);
             v1.setOnMouseClicked(e -> { dayClicked(v1,l1); });
 
-            // Search through the bday marker array for bdays matching the current date and add them to the calender
+            // Search through the bday marker array for bdays matching the current date and add them to the calendar
             for(int i=0; i<bdayMarkers.size(); i++){
                 if(dayAsNum == Integer.parseInt(bdayMarkers.get(i).day) && month.equals(bdayMarkers.get(i).month) && year.equals(bdayMarkers.get(i).year)){
                     Label l2 = new Label(bdayMarkers.get(i).name);
@@ -205,7 +243,13 @@ public class HelloController {
     // Writes Mon-Sun in the grid
     public void setWeekDays(){
         for(int i=0; i<daysArray.length; i++){
-            calenderGrid.add(new Label(daysArray[i]), i, 0);
+            Label dayLabel = new Label(daysArray[i]);
+            if(currentTheme.equals("light")){
+                dayLabel.setTextFill(Color.web("#000000"));
+            }else{
+                dayLabel.setTextFill(Color.web("#FEFEFE"));
+            }
+            calenderGrid.add(dayLabel, i, 0);
         }
     }
 
@@ -325,7 +369,12 @@ public class HelloController {
         markerInfoBar.setVisible(true);
         currentDayNode=v1;
         currentDayLabel=l1;
-        currentDayNode.setStyle("-fx-background-color: #ADD8E6;");
+        if(currentTheme=="light"){
+            currentDayNode.setStyle("-fx-background-color: #CEE8F0;");
+        }else{
+            currentDayNode.setStyle("-fx-background-color: #BB86FC;");
+        }
+
     }
 
     public void closeNode(){
@@ -411,11 +460,70 @@ public class HelloController {
             }
             fw.close();
         } catch (Exception e) {}
+
+        calenderGrid.getChildren().clear();
+        setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
 
+    //Change colour of theme based on current theme
     public void changeTheme(){
-        vContainer.setStyle("-fx-background-color: #020000;");
-        monthLabel.setTextFill(Color.web("#CCCCCC"));
-        yearLabel.setTextFill(Color.web("#CCCCCC"));
+        String primaryBackgroundColour;
+        String secondaryBackgroundColour;
+        String tertiaryBackgroundColour;
+        String primaryTextColour;
+        String secondaryTextColour = "#000000";
+
+        if(currentTheme.equals("light")){
+            primaryBackgroundColour = "-fx-background-color: #121212;";
+            secondaryBackgroundColour = "-fx-background-color: #282828;";
+            tertiaryBackgroundColour = "-fx-background-color: #BB86FC;";
+            primaryTextColour = "#FEFEFE";
+            moonIcon.setImage(new Image(getClass().getResourceAsStream("img/WhiteMoon.png")));
+            upArrow.setImage(new Image(getClass().getResourceAsStream("img/upArrowWhite.png")));
+            downArrow.setImage(new Image(getClass().getResourceAsStream("img/downArrowWhite.png")));
+            currentTheme="dark";
+        }else{
+            primaryBackgroundColour = "-fx-background-color: #FEFEFE;";
+            secondaryBackgroundColour = "-fx-background-color: #E8E8E8;";
+            tertiaryBackgroundColour = "-fx-background-color: #CEE8F0;";
+            primaryTextColour = "#000000";
+            moonIcon.setImage(new Image(getClass().getResourceAsStream("img/moon.png")));
+            upArrow.setImage(new Image(getClass().getResourceAsStream("img/upArrow.png")));
+            downArrow.setImage(new Image(getClass().getResourceAsStream("img/downArrow.png")));
+            currentTheme="light";
+        }
+        vContainer.setStyle(primaryBackgroundColour);
+        monthLabel.setTextFill(Color.web(primaryTextColour));
+        yearLabel.setTextFill(Color.web(primaryTextColour));
+        addBirthdayLabel.setTextFill(Color.web(primaryTextColour));
+        editBirthdayLabel.setTextFill(Color.web(primaryTextColour));
+        nameLabel.setTextFill(Color.web(primaryTextColour));
+        nameEditLabel.setTextFill(Color.web(primaryTextColour));
+        colourLabel.setTextFill(Color.web(primaryTextColour));
+        colourEditLabel.setTextFill(Color.web(primaryTextColour));
+        userFinishButton.setTextFill(Color.web(secondaryTextColour));
+        userEditButton.setTextFill(Color.web(secondaryTextColour));
+        userDeleteButton.setTextFill(Color.web(secondaryTextColour));
+        userFinishButton.setStyle(tertiaryBackgroundColour);
+        userEditButton.setStyle(tertiaryBackgroundColour);
+        userDeleteButton.setStyle(tertiaryBackgroundColour);
+        markerNotifCheck.setTextFill(Color.web(primaryTextColour));
+        markerEditNotifCheck.setTextFill(Color.web(primaryTextColour));
+        markerGiftCheck.setTextFill(Color.web(primaryTextColour));
+        markerEditGiftCheck.setTextFill(Color.web(primaryTextColour));
+        markerNameField.setStyle(tertiaryBackgroundColour);
+        markerEditNameField.setStyle(tertiaryBackgroundColour);
+        markerColourPicker.setStyle(tertiaryBackgroundColour);
+        markerEditColourPicker.setStyle(tertiaryBackgroundColour);
+        markerInfoBar.setStyle(secondaryBackgroundColour);
+        markerEditInfoBar.setStyle(secondaryBackgroundColour);
+        titleBar.setStyle(secondaryBackgroundColour);
+        menuHbox.setStyle(secondaryBackgroundColour);
+        titleLabel.setTextFill(Color.web(primaryTextColour));
+        markerInfoClose.setTextFill(Color.web(primaryTextColour));
+        markerEditInfoClose.setTextFill(Color.web(primaryTextColour));
+
+        calenderGrid.getChildren().clear();
+        setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
 }
