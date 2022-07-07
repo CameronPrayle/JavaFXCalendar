@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.example.calendertest2.HowManyDaysInTheMonth.howManyDays;
+
 public class HelloController {
     @FXML
     private VBox vContainer;
@@ -112,6 +114,7 @@ public class HelloController {
 
     // Current theme, checked when theme is changed to apply opposite settings to current theme
     String currentTheme = "light";
+
 
     @FXML
     public void initialize(){
@@ -219,7 +222,7 @@ public class HelloController {
 
             // Search through the bday marker array for bdays matching the current date and add them to the calendar
             for(int i=0; i<bdayMarkers.size(); i++){
-                if(dayAsNum == Integer.parseInt(bdayMarkers.get(i).day) && month.equals(bdayMarkers.get(i).month) && year.equals(bdayMarkers.get(i).year)){
+                if(dayAsNum == Integer.parseInt(bdayMarkers.get(i).day) && month.equals(bdayMarkers.get(i).month)){
                     Label l2 = new Label(bdayMarkers.get(i).name);
                     HBox h1 = new HBox();
                     h1.getStyleClass().add("bdayMarkerStyle");
@@ -257,49 +260,6 @@ public class HelloController {
     public void setMenuMonthYear(String month, String year){
         monthLabel.setText(month);
         yearLabel.setText(year);
-    }
-
-    //  Returns the amount of days in a given month
-    public int howManyDays(String month, String year){
-        int dayLimit=0;
-        switch (month){
-            case("Jan"): dayLimit = 31; break;
-            case("Feb"):
-                //Check for Leap year
-                int yearValue = Integer.parseInt(year);
-                boolean leap = false;
-                // if the year is divisible by 4
-                if (yearValue % 4 == 0){
-                    // if the year is century
-                    if (yearValue % 100 == 0){
-                        // if year is divided by 400
-                        if (yearValue % 400 == 0){
-                            leap = true;
-                        }else
-                            leap = false;
-                    }else
-                        leap = true;
-                }else
-                    leap = false;
-
-                if (!leap){
-                    dayLimit = 28;
-                }else{
-                    dayLimit = 29;
-                }
-                break;
-            case("Mar"): dayLimit = 31; break;
-            case("Apr"): dayLimit = 30; break;
-            case("May"): dayLimit = 31; break;
-            case("Jun"): dayLimit = 30; break;
-            case("Jul"): dayLimit = 31; break;
-            case("Aug"): dayLimit = 31; break;
-            case("Sep"): dayLimit = 30; break;
-            case("Oct"): dayLimit = 31; break;
-            case("Nov"): dayLimit = 30; break;
-            case("Dec"): dayLimit = 31; break;
-        }
-        return dayLimit;
     }
 
     public void incrementMonth(){
@@ -374,7 +334,6 @@ public class HelloController {
         }else{
             currentDayNode.setStyle("-fx-background-color: #BB86FC;");
         }
-
     }
 
     public void closeNode(){
@@ -398,6 +357,12 @@ public class HelloController {
         bdayMarkers.add(b1);
         calenderGrid.getChildren().clear();
         setCalender(cDay, cDayAsNum, cMonth, cYear);
+
+        //Reset fields to default for when user picks another date
+        markerNameField.setText("");
+        markerColourPicker.setValue(Color.web("#FFFFFF"));
+        markerNotifCheck.setSelected(false);
+        markerGiftCheck.setSelected(false);
     }
 
     public void closeEditNode(){
@@ -407,7 +372,6 @@ public class HelloController {
     private void markerClicked(HBox h1, Label l2, BirthdayMarker b1) {
         // Set user input fields to the birthday marker details
         currentBDaymarker = b1;
-        markerInfoBar.setVisible(false);
         markerEditInfoBar.setVisible(true);
         markerEditNameField.setText(b1.name);
         markerEditColourPicker.setValue(Color.valueOf(b1.colour));

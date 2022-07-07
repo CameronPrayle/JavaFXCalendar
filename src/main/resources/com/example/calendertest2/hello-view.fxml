@@ -154,7 +154,7 @@
                         <CheckBox fx:id="markerGiftCheck" mnemonicParsing="false" text="Gift" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
                      </children>
                      <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                      <padding>
                         <Insets right="5.0" />
@@ -210,6 +210,9 @@
                      <padding>
                         <Insets right="5.0" />
                      </padding>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
                   </GridPane>
                </children>
             </HBox>

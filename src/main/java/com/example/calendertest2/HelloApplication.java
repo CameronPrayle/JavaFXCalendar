@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 
@@ -26,7 +27,13 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop(){
+    }
+
     public static void main(String[] args) {
         launch();
     }
+
+
 }
