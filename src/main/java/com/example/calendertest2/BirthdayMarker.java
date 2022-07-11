@@ -17,9 +17,10 @@ public class BirthdayMarker {
     String colour;
     boolean notification;
     boolean gift;
+    String giftDesc;
 
 
-    public BirthdayMarker(String name, String day, String month, String year, String colour, boolean notification, boolean gift) {
+    public BirthdayMarker(String name, String day, String month, String year, String colour, boolean notification, boolean gift, String giftDesc) {
         this.name = name;
         this.day = day;
         this.month = month;
@@ -27,6 +28,10 @@ public class BirthdayMarker {
         this.colour = colour;
         this.notification = notification;
         this.gift = gift;
+        if(giftDesc.equals("")){
+            giftDesc = "none";
+        }
+        this.giftDesc = giftDesc;
 
         if(this.notification == true){
             checkForNotification();
@@ -35,7 +40,7 @@ public class BirthdayMarker {
     public void addMarkerToFile(){
         try {
             FileWriter fw = new FileWriter("BDayMarker.csv",true);
-            fw.write(name +","+ day +","+ month +","+ year +","+ colour +","+ notification +","+ gift+ "\n");
+            fw.write(name +","+ day +","+ month +","+ year +","+ colour +","+ notification +","+ gift+","+giftDesc+"\n");
             fw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

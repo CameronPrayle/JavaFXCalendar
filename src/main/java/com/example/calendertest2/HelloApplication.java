@@ -22,7 +22,7 @@ public class HelloApplication extends Application {
         scene.getStylesheets().add(cssURL.toExternalForm());
 
 //      Create Window
-        stage.setTitle("Hello!");
+        stage.setTitle("Birthday Reminder");
         stage.setScene(scene);
         stage.show();
     }

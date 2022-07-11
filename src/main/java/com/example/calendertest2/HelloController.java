@@ -52,6 +52,8 @@ public class HelloController {
     @FXML
     private CheckBox markerGiftCheck;
     @FXML
+    private TextField markerGiftDesc;
+    @FXML
     private Label markerInfoClose;
     @FXML
     private GridPane markerEditInfoBar;
@@ -63,6 +65,8 @@ public class HelloController {
     private CheckBox markerEditNotifCheck;
     @FXML
     private CheckBox markerEditGiftCheck;
+    @FXML
+    private TextField markerEditGiftDesc;
     @FXML
     private Label markerEditInfoClose;
     @FXML
@@ -124,6 +128,8 @@ public class HelloController {
         markerInfoBar.managedProperty().bind(markerInfoBar.visibleProperty());
         markerEditInfoBar.setVisible(false);
         markerEditInfoBar.managedProperty().bind(markerEditInfoBar.visibleProperty());
+        markerGiftDesc.setVisible(false);
+        markerEditGiftDesc.setVisible(false);
     }
 
     //Reads the BdayMarker CSV file and creates birthday marker objects using its contents. Stores the birthday markers in a list to display them in the calendar
@@ -143,6 +149,8 @@ public class HelloController {
                 String colour = currentLineSplit[4];
                 boolean notif;
                 boolean gift;
+                String giftDesc = currentLineSplit[7];
+
                 if(currentLineSplit[5].equals("true")){
                     notif = true;
                 }else{
@@ -155,7 +163,7 @@ public class HelloController {
                 }
 
                 // Make BirthdayMarker object, add it to BirthdayMarker list
-                bdayMarkers.add(new BirthdayMarker(name,day,month,year,colour,notif,gift));
+                bdayMarkers.add(new BirthdayMarker(name,day,month,year,colour,notif,gift,giftDesc));
             }
         }catch (Exception e){}
     }
@@ -322,13 +330,45 @@ public class HelloController {
         setCalender(cDay, cDayAsNum, cMonth, cYear);
     }
 
+
+    boolean markerHasBeenClicked=false;
     public void dayClicked(VBox v1, Label l1){
+        //Reset fields to default for when user picks another date
+        markerNameField.setText("");
+        markerColourPicker.setValue(Color.web("#FFFFFF"));
+        markerNotifCheck.setSelected(false);
+        markerGiftCheck.setSelected(false);
+        markerGiftDesc.setText("");
+
+        //If a node is already highlighted, unhighlight it
         if(!(currentDayNode==null)){
             currentDayNode.setStyle("-fx-background-color: transparent;");
         }
+
+        //Show bar and assign the current node
         markerInfoBar.setVisible(true);
         currentDayNode=v1;
         currentDayLabel=l1;
+
+        // Checks so 2 menus can't show at the same time
+        if(markerHasBeenClicked){
+            markerInfoBar.setVisible(false);
+        }else{
+            markerEditInfoBar.setVisible(false);
+        }
+
+        markerHasBeenClicked=false;
+
+        //Add listeners for showing gift text box
+        markerGiftCheck.selectedProperty().addListener( e -> {
+            if(markerGiftCheck.isSelected()){
+                markerGiftDesc.setVisible(true);
+            }else{
+                markerGiftDesc.setVisible(false);
+            }
+        });
+
+        // Change node BG colour with selected theme
         if(currentTheme=="light"){
             currentDayNode.setStyle("-fx-background-color: #CEE8F0;");
         }else{
@@ -350,9 +390,10 @@ public class HelloController {
         String colour = String.valueOf(markerColourPicker.getValue());
         boolean notif = markerNotifCheck.isSelected();
         boolean gift = markerGiftCheck.isSelected();
+        String giftDesc = markerGiftDesc.getText();
 
         // Make BirthdayMarker object, add it to BirthdayMarker list
-        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift);
+        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift,giftDesc);
         b1.addMarkerToFile();
         bdayMarkers.add(b1);
         calenderGrid.getChildren().clear();
@@ -363,6 +404,7 @@ public class HelloController {
         markerColourPicker.setValue(Color.web("#FFFFFF"));
         markerNotifCheck.setSelected(false);
         markerGiftCheck.setSelected(false);
+        markerGiftDesc.setText("");
     }
 
     public void closeEditNode(){
@@ -377,6 +419,22 @@ public class HelloController {
         markerEditColourPicker.setValue(Color.valueOf(b1.colour));
         markerEditNotifCheck.setSelected(b1.notification);
         markerEditGiftCheck.setSelected(b1.gift);
+        markerEditGiftDesc.setText(b1.giftDesc);
+
+        if(markerEditGiftCheck.isSelected()){
+            markerEditGiftDesc.setVisible(true);
+        }
+
+        //Add listeners for showing gift text box
+        markerEditGiftCheck.selectedProperty().addListener( e -> {
+            if(markerEditGiftCheck.isSelected()){
+                markerEditGiftDesc.setVisible(true);
+            }else{
+                markerEditGiftDesc.setVisible(false);
+            }
+        });
+
+        markerHasBeenClicked = true;
     }
     public void editMarker(){
         deleteMarker(); // Delete the old marker
@@ -389,7 +447,9 @@ public class HelloController {
         String colour = String.valueOf(markerEditColourPicker.getValue());
         boolean notif = markerEditNotifCheck.isSelected();
         boolean gift = markerEditGiftCheck.isSelected();
-        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift);
+        String giftDesc = markerEditGiftDesc.getText();
+
+        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift,giftDesc);
         b1.addMarkerToFile();
         bdayMarkers.add(b1);
 
@@ -486,6 +546,8 @@ public class HelloController {
         titleLabel.setTextFill(Color.web(primaryTextColour));
         markerInfoClose.setTextFill(Color.web(primaryTextColour));
         markerEditInfoClose.setTextFill(Color.web(primaryTextColour));
+        markerGiftDesc.setStyle(tertiaryBackgroundColour);
+        markerEditGiftDesc.setStyle(tertiaryBackgroundColour);
 
         calenderGrid.getChildren().clear();
         setCalender(cDay, cDayAsNum, cMonth, cYear);

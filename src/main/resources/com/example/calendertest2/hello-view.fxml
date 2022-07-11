@@ -117,10 +117,10 @@
                       <RowConstraints maxHeight="91.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="158.0" minHeight="5.0" prefHeight="82.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="158.0" minHeight="1.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="320.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="146.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="158.0" minHeight="1.0" prefHeight="74.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="118.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label fx:id="addBirthdayLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="170.0" prefWidth="118.0" text="Add a Birthday!" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
@@ -144,14 +144,18 @@
                               <Insets left="5.0" right="5.0" top="20.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="userFinishButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#addMarker" text="Finish" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                        <Button fx:id="userFinishButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#addMarker" text="Finish" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                         <Label fx:id="markerInfoClose" alignment="CENTER" onMouseClicked="#closeNode" prefHeight="25.0" prefWidth="21.0" text="x" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
                         <CheckBox fx:id="markerNotifCheck" mnemonicParsing="false" text="Notification" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                        <CheckBox fx:id="markerGiftCheck" mnemonicParsing="false" text="Gift" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="markerGiftCheck" mnemonicParsing="false" text="Gift" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></CheckBox>
+                        <TextField fx:id="markerGiftDesc" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                      <HBox.margin>
                         <Insets left="10.0" />
@@ -170,10 +174,10 @@
                         <RowConstraints maxHeight="91.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="158.0" minHeight="5.0" prefHeight="82.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="158.0" minHeight="1.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="320.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="146.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="158.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="158.0" minHeight="1.0" prefHeight="74.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="323.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <Label fx:id="editBirthdayLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="170.0" prefWidth="118.0" text="Edit Birthday!" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
@@ -197,15 +201,19 @@
                               <Insets left="5.0" right="5.0" top="20.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="userEditButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#editMarker" text="Edit" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                        <Button fx:id="userEditButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#editMarker" text="Edit" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                         <Label fx:id="markerEditInfoClose" alignment="CENTER" onMouseClicked="#closeEditNode" prefHeight="25.0" prefWidth="21.0" text="x" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
                         <CheckBox fx:id="markerEditNotifCheck" mnemonicParsing="false" text="Notification" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                        <CheckBox fx:id="markerEditGiftCheck" mnemonicParsing="false" text="Gift" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="markerEditGiftCheck" mnemonicParsing="false" text="Gift" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></CheckBox>
                         <Button fx:id="userDeleteButton" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#deleteMarker" text="Delete" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                        <TextField fx:id="markerEditGiftDesc" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                      <padding>
                         <Insets right="5.0" />
