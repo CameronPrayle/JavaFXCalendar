@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="vContainer" alignment="CENTER" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.calendertest2.HelloController">
+<VBox fx:id="vContainer" alignment="CENTER" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.calendertest2.CalendarController">
     <padding>
         <Insets left="20.0" right="20.0" />
     </padding>
@@ -156,6 +156,7 @@
                               <Insets />
                            </GridPane.margin></CheckBox>
                         <TextField fx:id="markerGiftDesc" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="errorText" alignment="CENTER" prefHeight="37.0" prefWidth="101.0" text="Fields can't contain &quot;,&quot;" textAlignment="CENTER" textFill="#c31c1c" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP" />
                      </children>
                      <HBox.margin>
                         <Insets left="10.0" />
@@ -213,6 +214,7 @@
                               <Insets />
                            </GridPane.margin></CheckBox>
                         <Button fx:id="userDeleteButton" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#deleteMarker" text="Delete" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                        <Label fx:id="errorEditText" alignment="CENTER" prefHeight="49.0" prefWidth="101.0" text="Fields can't contain &quot;,&quot;" textAlignment="CENTER" textFill="#c31c1c" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <TextField fx:id="markerEditGiftDesc" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                      <padding>

@@ -5,16 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 
-public class HelloApplication extends Application {
+public class Calendar extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
 //      Load FXML File
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Calendar.class.getResource("Calendar-View.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 650);
 
 //      Get CSS file
@@ -24,6 +23,8 @@ public class HelloApplication extends Application {
 //      Create Window
         stage.setTitle("Birthday Reminder");
         stage.setScene(scene);
+        stage.setMinWidth(800);
+        stage.setMinHeight(675);
         stage.show();
     }
 

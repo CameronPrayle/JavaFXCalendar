@@ -11,8 +11,6 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.Scanner;
 
 import static com.example.calendertest2.HowManyDaysInTheMonth.howManyDays;
 
-public class HelloController {
+public class CalendarController {
     @FXML
     private VBox vContainer;
     @FXML
@@ -87,6 +85,10 @@ public class HelloController {
     private Button userEditButton;
     @FXML
     private Button userDeleteButton;
+    @FXML
+    private Label errorText;
+    @FXML
+    private Label errorEditText;
 
     //  Month and Days Arrays
     String[] monthsArray = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -130,6 +132,8 @@ public class HelloController {
         markerEditInfoBar.managedProperty().bind(markerEditInfoBar.visibleProperty());
         markerGiftDesc.setVisible(false);
         markerEditGiftDesc.setVisible(false);
+        errorText.setVisible(false);
+        errorEditText.setVisible(false);
     }
 
     //Reads the BdayMarker CSV file and creates birthday marker objects using its contents. Stores the birthday markers in a list to display them in the calendar
@@ -334,6 +338,7 @@ public class HelloController {
     boolean markerHasBeenClicked=false;
     public void dayClicked(VBox v1, Label l1){
         //Reset fields to default for when user picks another date
+        errorText.setVisible(false);
         markerNameField.setText("");
         markerColourPicker.setValue(Color.web("#FFFFFF"));
         markerNotifCheck.setSelected(false);
@@ -392,19 +397,26 @@ public class HelloController {
         boolean gift = markerGiftCheck.isSelected();
         String giftDesc = markerGiftDesc.getText();
 
-        // Make BirthdayMarker object, add it to BirthdayMarker list
-        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift,giftDesc);
-        b1.addMarkerToFile();
-        bdayMarkers.add(b1);
-        calenderGrid.getChildren().clear();
-        setCalender(cDay, cDayAsNum, cMonth, cYear);
+        //Check to see if text fields contain ","
+        if(name.contains(",") || giftDesc.contains(",")){
+            errorText.setVisible(true);
+        }else {
+            errorEditText.setVisible(false);
 
-        //Reset fields to default for when user picks another date
-        markerNameField.setText("");
-        markerColourPicker.setValue(Color.web("#FFFFFF"));
-        markerNotifCheck.setSelected(false);
-        markerGiftCheck.setSelected(false);
-        markerGiftDesc.setText("");
+            // Make BirthdayMarker object, add it to BirthdayMarker list
+            BirthdayMarker b1 = new BirthdayMarker(name, day, month, year, colour, notif, gift, giftDesc);
+            b1.addMarkerToFile();
+            bdayMarkers.add(b1);
+            calenderGrid.getChildren().clear();
+            setCalender(cDay, cDayAsNum, cMonth, cYear);
+
+            //Reset fields to default for when user picks another date
+            markerNameField.setText("");
+            markerColourPicker.setValue(Color.web("#FFFFFF"));
+            markerNotifCheck.setSelected(false);
+            markerGiftCheck.setSelected(false);
+            markerGiftDesc.setText("");
+        }
     }
 
     public void closeEditNode(){
@@ -412,6 +424,7 @@ public class HelloController {
     }
 
     private void markerClicked(HBox h1, Label l2, BirthdayMarker b1) {
+        errorEditText.setVisible(false);
         // Set user input fields to the birthday marker details
         currentBDaymarker = b1;
         markerEditInfoBar.setVisible(true);
@@ -437,8 +450,6 @@ public class HelloController {
         markerHasBeenClicked = true;
     }
     public void editMarker(){
-        deleteMarker(); // Delete the old marker
-
         //Add new instance of birthday marker
         String day = currentDayLabel.getText();
         String month = cMonth;
@@ -449,13 +460,20 @@ public class HelloController {
         boolean gift = markerEditGiftCheck.isSelected();
         String giftDesc = markerEditGiftDesc.getText();
 
-        BirthdayMarker b1 = new BirthdayMarker(name,day,month,year,colour,notif,gift,giftDesc);
-        b1.addMarkerToFile();
-        bdayMarkers.add(b1);
+        //Check to see if text fields contain ","
+        if(name.contains(",") || giftDesc.contains(",")){
+            errorEditText.setVisible(true);
+        }else {
+            errorEditText.setVisible(false);
+            deleteMarker(); // Delete the old marker
+            BirthdayMarker b1 = new BirthdayMarker(name, day, month, year, colour, notif, gift, giftDesc);
+            b1.addMarkerToFile();
+            bdayMarkers.add(b1);
 
-        //Redraw Calendar
-        calenderGrid.getChildren().clear();
-        setCalender(cDay, cDayAsNum, cMonth, cYear);
+            //Redraw Calendar
+            calenderGrid.getChildren().clear();
+            setCalender(cDay, cDayAsNum, cMonth, cYear);
+        }
     }
 
     public void deleteMarker() {

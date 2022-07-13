@@ -21,6 +21,9 @@ public class BirthdayMarker {
 
 
     public BirthdayMarker(String name, String day, String month, String year, String colour, boolean notification, boolean gift, String giftDesc) {
+        if(name.equals("")){
+            name = "none";
+        }
         this.name = name;
         this.day = day;
         this.month = month;
