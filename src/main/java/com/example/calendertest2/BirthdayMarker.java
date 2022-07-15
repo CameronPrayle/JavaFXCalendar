@@ -85,7 +85,7 @@ public class BirthdayMarker {
         }
     }
 
-    private int getDayToBeChecked(int dayToCheck, int amountOfDaysToGoBack, String prevMonth) {
+    public int getDayToBeChecked(int dayToCheck, int amountOfDaysToGoBack, String prevMonth) {
         for (int i = 0; i < amountOfDaysToGoBack; i++) {
             dayToCheck--;
             if(dayToCheck==0){
